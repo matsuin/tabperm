@@ -54,6 +54,8 @@
           document.getElementById(id).classList.add("disable")
         }
       }
+      // redraw
+      document.getElementById('panel').style.display = 'block';
     });
   });
 
