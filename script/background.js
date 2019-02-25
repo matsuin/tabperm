@@ -269,7 +269,7 @@
     dbg("onMessage: perm=" + perm);
 
     if (command === "reload") {
-      browser.tabs.reload({bypassCache: false});
+      browser.tabs.reload(tabid, {bypassCache: false});
     } else if (command === "get") {
       if (!tabPerms.hasOwnProperty(tabid)) {
         tabPerms[tabid] = tabpermSettings[PERMS_DEFAULT];

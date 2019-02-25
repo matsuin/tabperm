@@ -20,7 +20,7 @@
     "object-default": 0x1000,
   };
 
-  var reload = false;
+  var reload = 0;
 
   var dbg = console.log;
 
@@ -79,12 +79,14 @@
 
     classList.add(command);
 
-    if (SRC_PERMS.hasOwnProperty(id)) {
-      reload = true;
-    }
-
     browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
       var tabid = tabs[0].id;
+      dbg("click: tabid="+tabid);
+
+      if (SRC_PERMS.hasOwnProperty(id)) {
+        reload = tabid;
+      }
+
       browser.runtime.sendMessage({
         tabid: tabid,
         command: command,
@@ -95,14 +97,16 @@
   });
 
   //
-  var unload = function () {
-    dbg("unload:");
-    if (reload) {
+  window.addEventListener('pagehide', () => {
+    dbg("pagehide:");
+    if (reload > 0) {
       browser.runtime.sendMessage({
-        command: "reload"
+        tabid: reload,
+        command: "reload",
       });
     }
-  }
-  window.addEventListener("unload", unload, false);
+  }, {
+    once: true
+  });
 
 })();
